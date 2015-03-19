@@ -10,7 +10,7 @@ func :: Int -> Int -> Int
 func s n 
  | (n == 0) && (vendas 0) == s = 1
  | (n == 0) && (vendas 0) /= s = 0
- | otherwise func s (n - 1) + teste n s
+ | otherwise = func s (n - 1) + teste n s
 		
 		
 		
