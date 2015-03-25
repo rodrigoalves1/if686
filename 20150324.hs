@@ -1,5 +1,5 @@
 --mergesort / heapsort
-
+--REFERENTE AO TRABALHO 2
 --mergesort
 --A complexidade do firstHalf e do secondHalf é n/2, do size é n, do merge é n (sendo n o tamanho da maior lista), por sua vez o mergesort tem complexidade n log n 
 size :: [Int] -> Int
@@ -70,10 +70,6 @@ get :: [Int] -> Int -> Int
 get (a:as) 0 = a
 get (a:as) n = get as (n-1)
 
-size :: [Int] -> Int
-size [] = 0
-size (a:as) = 1 + size as
-
 firstElements :: [Int] -> Int -> [Int]
 firstElements list 0 = []
 firstElements (a:as) n = [a] ++ firstElements as (n-1)
@@ -82,3 +78,88 @@ lastElements :: [Int] -> Int -> [Int]
 lastElements list 0 = list
 lastElements (a:as) n = lastElements as (n-1)
 
+
+--CÓDIGO ABAIXO É REFERENTE A AULA!!!
+quicksort :: [Int] -> [Int]
+quicksort [] = []
+quicksort (a:as) = (quicksort [y | y <- as, y < a])
+                       ++ [a] ++
+                      (quicksort [y | y <- as, y >= a])
+
+menorMaior :: Int -> Int -> Int -> (Int,Int)
+menorMaior a b c = (smaller, bigger) 
+ where smaller = menor a b c
+       bigger = maioor a b c
+ 
+maioor :: Int -> Int -> Int -> Int
+maioor a b c
+ | a > b = maioorAux a c
+ | otherwise = maioorAux b c
+ 
+maioorAux :: Int -> Int -> Int
+maioorAux a b
+ | a > b = a
+ | otherwise = b
+ 
+menor :: Int -> Int -> Int -> Int
+menor a b c
+ | a < b = menorAux a c
+ | otherwise = menorAux b c
+ 
+menorAux :: Int -> Int -> Int
+menorAux a b
+ | a < b = a
+ | otherwise = b
+
+ordenaTripla :: (Int,Int,Int) -> (Int,Int,Int)
+ordenaTripla (a,b,c) = ordenaTriplaAux [a,b,c]
+
+ordenaTriplaAux :: [Int] -> (Int,Int,Int)
+ordenaTriplaAux list = (get lista 0,get lista 1, get lista 2)
+ where lista = mergesort list
+
+type Ponto = (Float,Float)
+type Reta = (Ponto,Ponto)
+
+firstPoint :: Reta -> Ponto
+firstPoint (a,b) = a
+
+secondPoint :: Reta -> Ponto
+secondPoint (a,b) = b
+
+vertical :: Reta -> Bool
+vertical ((x1,x2),(x3,x4))
+ | x1 == x3 = True
+ | otherwise = False
+ 
+pontoY :: Float -> Reta -> Float
+pontoY x ((x1,y1),(x2,y2)) = ((y2-y1)*(x-x1))/(x2-x1) + (y1*(x2-x1))/(x2-x1)
+
+--type String = [Char]
+type Pessoa = String
+type Livro = String
+type BancoDados = [(Pessoa,Livro)]
+
+baseExemplo :: BancoDados
+baseExemplo = [("Sergio","O Senhor dos Aneis"),("Andre","Duna"),("Andre","Duna"),("Fernando","Jonathan Strange & Mr. Norrel"),("Fernando","A Game of Thrones")] -- livros emprestados
+--livros ls pp = [l| (p,l) <- ls, pp == p]
+livros :: BancoDados -> Pessoa -> [Livro]
+livros [] p = []
+livros ((pe,l):as) p
+ | pe == p = l : livros as p
+ | otherwise = livros as p
+
+emprestimos :: BancoDados -> Livro ->[Pessoa]
+emprestimos ls li = [p | (p,l) <- ls, li == l]
+
+emprestado :: BancoDados -> Livro -> Bool
+emprestado ls li = head [True | (p,l) <- ls, li == l]
+
+qtdEmprestimos :: BancoDados -> Pessoa -> Int
+qtdEmprestimos ls pe = size [1 | (p,l) <- ls, pe == p]
+
+emprestar :: BancoDados -> Pessoa -> Livro -> BancoDados
+emprestar ls p l = (p,l) : ls
+
+devolver :: BancoDados -> Pessoa -> Livro -> BancoDados
+devolver ls pe li = [(p,l) | (p,l) <- ls , (pe,li) /=(p,l) ]
