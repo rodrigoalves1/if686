@@ -108,3 +108,34 @@ comparaConjuntos a b
 	|igual (elimRep (quicksort a)) (elimRep (quicksort b)) == True = "A igual B"
 	|intercesiona (elimRep (quicksort a)) (elimRep (quicksort b)) == True = "A intercesiona B"
 	|otherwise = "Conjuntos disjuntos" 
+	
+-- exercicios de aula 26/03/2015
+pegar :: [t] -> Int -> [t]
+pegar [] n = []
+pegar (a:as) 0 = []
+pegar (a:as) n = a : pegar as (n-1)
+
+pegarUltimos :: [t] -> Int -> [t]
+pegarUltimos [] n = []
+pegarUltimos (a:as) 0 = (a:as)
+pegarUltimos (a:as) n = pegarUltimos as (n-1)
+--pegarUltimos (a:as) n = [ h | h <- a, pos >= n ] where pos = (a:as) !! 
+
+takeWhile2 :: [t] -> (t -> Bool) -> [t]
+takeWhile2 [] _ = []
+takeWhile2 (a:as) ta 
+ | ta(a) == False  = []
+ | otherwise = a : takeWhile2 as ta
+ 
+dropWhile2 :: [t] -> (t -> Bool) -> [t]
+dropWhile2 (a:as) ta 
+ | ta (a) == False = (a:as)
+ | otherwise = dropWhile2 as ta
+ 
+ 
+quicksort :: Ord t => [t] -> [t]
+quicksort [] = []
+quicksort (a:as) = (quicksort [y | y <- as, y < a]) ++ [a] ++ (quicksort [y | y <- as, y >= a])
+ 
+--agrupar :: Ord t => [t] -> [(t,Int)]
+
