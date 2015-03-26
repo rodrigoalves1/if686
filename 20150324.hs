@@ -163,3 +163,72 @@ emprestar ls p l = (p,l) : ls
 
 devolver :: BancoDados -> Pessoa -> Livro -> BancoDados
 devolver ls pe li = [(p,l) | (p,l) <- ls , (pe,li) /=(p,l) ]
+
+
+
+getWord :: String -> String
+getWord [] = []
+getWord (a:as)
+ | a == ' ' = ""
+ | otherwise = a : getWord as
+
+dropWord :: String -> String
+dropWord [] = []
+dropWord (a:as)
+ | a == ' ' = ""++as
+ | otherwise = ' ' : dropWord (as)
+
+dropSpace :: String -> String
+dropSpace [] = []
+dropSpace (a:as)
+ | a == ' ' = dropSpace as
+ | otherwise = (a:as)
+
+type Word = String
+type Line = [Word]
+
+splitWords :: String -> [Word]
+splitWords [] = []
+splitWords (a:as)
+ | a == ' ' = splitWords (dropSpace (a:as))
+ | otherwise = getWord (a:as) : splitWords (dropWord (a:as))
+--Uma linha de texto contendo diversas palavras. 
+
+
+getLinha :: Int -> [Word] -> Line
+getLinha 0 [] = []
+getLinha n (a:as) = getLineAux n (a:as) 0 0
+
+getLineAux :: Int -> [Word] -> Int -> Int -> Line
+getLineAux n list i s
+ | s >= n = []
+ | otherwise = pos : getLineAux n list (i+1) (s + (length pos))
+ where pos = list !! i
+ 
+--Dado o número de caracteres em uma linha, devolve uma lista de palavras que não extrapola esse limite a partir de uma outra lista de palavras: 
+
+--getLine 10 ["Oi", "meu", "nome", "é", "Rodrigo"] = ["Oi", "meu", "nome", "é"]
+
+--dropLine :: Int -> [Word] -> [Word]
+
+--Análogo ao anterior, mas descarta as primeiras palavras da lista.
+
+--splitLines :: [Word] -> [Line]
+
+--Quebra uma lista de palavras em uma lista de linhas (uma lista de listas de palavras). Supõe que existe um tamanho de linha (em caracteres) pré-estabelecido (80, 100, fica a seu critério).
+
+--fill :: String -> [Line]
+
+--Pega uma string contendo palavras separadas por espaços em branco e transforma em uma lista de linhas, cada uma contendo palavras.
+
+--fill st = splitLines (splitWords st)
+
+--(a solução já foi dada :).
+
+--joinLines :: [Line] -> String
+
+--O inverso de fill.
+
+--trim :: String -> String
+--trim [] = []
+--trim str = dropSpace (reverse (dropSpace (reverse str)))
