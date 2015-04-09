@@ -60,7 +60,7 @@ showExpr (Lit n) =   show n
 showExpr (Add e1 e2) =  "("++showExpr e1++")" ++" + "++ "("++showExpr e2++")"
 showExpr (Sub e1 e2) =  "("++showExpr e1++")" ++" - "++ "("++showExpr e2++")"
 
-data List t = Nil | Cons t (List t)
+data List t = Nil | Cons t (List t)  deriving (Show)
 
 data Tree t = NilT | Node t (Tree t) (Tree t) deriving (Eq,Show)
 -- toList (Cons 2 (Cons 1(Nil)))
@@ -73,6 +73,4 @@ fromList :: [t] -> List t
 fromList [] = Nil
 fromList (a:as) = Cons a (fromList as)
 
-
-
-
+depth :: (Tree t) -> Int
