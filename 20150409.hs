@@ -50,24 +50,20 @@ naoMarcado marcado (a:as)
  | elem a marcado = naoMarcado marcado as
  | otherwise = [a]
 
- --data Graph a = Graph [a] [(a, a, Int)] deriving (Show, Eq, Ord)
+
 --passar nos e adj ordenados
 --esta funcao passa o primeiro no para fazer uma busca em profundidade, caso o no a seja elemento do resultado da busca retorna True, do contrario 
 --retorna False
 dfs :: (Ord a) => (Graph a) -> a -> Bool
---dfs (Graph nos adj) a = if elem a nos == False then False
 dfs (Graph nos adj) a = elem a (dfsAux (Graph nos adj) [nos !! 0] (naoMarcado [nos !! 0] (getAdj adj (nos !! 0))) [nos !! 0]  )
 
-----dfs2 meuGrafo [1] (naoMarcado [1] (getAdj meuGrafo 1)) [1]
+
 --parametros: grafo,lista de nos marcados, no nao marcado a ser adicionado, pilha
 dfsAux :: (Ord a) => (Graph a) -> [a] -> [a] -> [a] -> [a]
+dfsAux _ marcado [] (a:[]) = reverse marcado
 dfsAux (Graph nos adj) marcado (b:bs) [] = reverse marcado
---dfsAux (Graph nos adj) marcado [] (a:[]) = []
---dfsAux (Graph nos adj) marcado [] (a:as) = dfsAux (Graph nos adj) marcado (naoMarcado marcado (getAdj adj (head as))) as
-dfsAux (Graph nos adj) marcado (b:bs) (a:as) 
- | (b:bs) == [] = dfsAux (Graph nos adj) marcado (naoMarcado marcado (getAdj adj (head as))) as -- se chegou numa folha ou num cara q ja tem todos os vizinhos marcados, da um pop na pilha e chama novamente a funcao
- | (b:bs) /= [] = dfsAux (Graph nos adj) (b:marcado) (naoMarcado marcado (getAdj adj b)) (b:marcado)  -- marca o cara, coloca ele na pilha e chama a funcao com os adjacentes a ele 
- | otherwise = []
-{- -}
---dfsAux meuGrafo [1] (naoMarcado [1] (getAdj adj (1))) [1]
+dfsAux (Graph nos adj) marcado [] (a:as) = dfsAux (Graph nos adj) marcado (naoMarcado marcado (getAdj adj (head as))) as
+dfsAux (Graph nos adj) marcado (b:bs) (a:as) = dfsAux (Graph nos adj) (b:marcado) (naoMarcado (b:marcado) (getAdj adj b)) (b:marcado)
+
+
 --Exercícios na sala de aula
