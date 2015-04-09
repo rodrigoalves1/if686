@@ -1,3 +1,4 @@
+import Data.Char 
 --Trabalho
 --Questão 1
        --       lista nós / lista arestas        
@@ -50,20 +51,69 @@ naoMarcado marcado (a:as)
  | elem a marcado = naoMarcado marcado as
  | otherwise = [a]
 
-
+ --data Graph a = Graph [a] [(a, a, Int)] deriving (Show, Eq, Ord)
 --passar nos e adj ordenados
 --esta funcao passa o primeiro no para fazer uma busca em profundidade, caso o no a seja elemento do resultado da busca retorna True, do contrario 
 --retorna False
 dfs :: (Ord a) => (Graph a) -> a -> Bool
+--dfs (Graph nos adj) a = if elem a nos == False then False
 dfs (Graph nos adj) a = elem a (dfsAux (Graph nos adj) [nos !! 0] (naoMarcado [nos !! 0] (getAdj adj (nos !! 0))) [nos !! 0]  )
 
-
+----dfs2 meuGrafo [1] (naoMarcado [1] (getAdj meuGrafo 1)) [1]
 --parametros: grafo,lista de nos marcados, no nao marcado a ser adicionado, pilha
 dfsAux :: (Ord a) => (Graph a) -> [a] -> [a] -> [a] -> [a]
 dfsAux _ marcado [] (a:[]) = reverse marcado
 dfsAux (Graph nos adj) marcado (b:bs) [] = reverse marcado
 dfsAux (Graph nos adj) marcado [] (a:as) = dfsAux (Graph nos adj) marcado (naoMarcado marcado (getAdj adj (head as))) as
 dfsAux (Graph nos adj) marcado (b:bs) (a:as) = dfsAux (Graph nos adj) (b:marcado) (naoMarcado (b:marcado) (getAdj adj b)) (b:marcado)
+ {-| (b:bs) == [] && as /= [] = dfsAux (Graph nos adj) marcado (naoMarcado marcado (getAdj adj (head as))) as -- se chegou numa folha ou num cara q ja tem todos os vizinhos marcados, da um pop na pilha e chama novamente a funcao
+ | (b:bs) /= [] = dfsAux (Graph nos adj) (b:marcado) (naoMarcado (b:marcado) (getAdj adj b)) (b:marcado)  -- marca o cara, coloca ele na pilha e chama a funcao com os adjacentes a ele 
+ | otherwise = []
+ -}
+--dfsAux meuGrafo [1] (naoMarcado [1] (getAdj [(1,2,1),(1,5,1),(2,1,1),(2,3,1),(2,5,1),(3,2,1),(3,4,1),(4,3,1),(4,5,1),(4,6,1),(5,1,1),(5,2,1),(5,4,1)] (1))) [1]
 
 
 --Exercícios na sala de aula
+
+mapp :: (t -> u) -> [t] -> [u]
+mapp f [] = []
+mapp f (a:as) = map f (a:as)
+
+posicao :: Char -> Int
+posicao c = (ord c) - 96
+
+posicaoAlfabeto :: (t -> Int) -> [t] -> [Int]
+posicaoAlfabeto f [] = []
+posicaoAlfabeto f list = (map f list)
+ 
+somaString :: [String] -> [Int]
+somaString (a:as) = posicaoAlfabeto (+) [(foldr (+) 0 (posicaoAlfabeto (posicao) (a:as)))]
+
+--map fold map
+mappp :: (t -> u) -> [t] -> [u]
+mappp f list = [ (f l) | l <- list] 
+
+member :: Eq t => t -> [t] -> Bool
+member a list = foldr (||) False (map (== a) list)
+
+
+repetido :: Eq t => [t] -> t -> Int
+repetido [] t = 0
+repetido (a:as) b
+ | a == b = 1 + repetido as b
+ | otherwise = repetido as b
+{-
+union :: Eq t => [t] -> [t] -> [t]
+union list1 list2 = foldr (++) [] (unir list1 list2)
+ 
+ 
+unir :: Eq t => [t] -> [t] -> [t]
+unir [] (b:bs)  = b : unir [] bs
+unir (a:as) []  = a : unir [] as
+unir [] []  = []
+unir (a:as) (b:bs) 
+ | a == b  = a : unir as bs 
+ | a /= b  = a : b : unir as bs 
+ | otherwise = unir as bs 
+ -}
+ 
