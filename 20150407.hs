@@ -72,5 +72,17 @@ toList (Cons t x) = (t:toList x)
 fromList :: [t] -> List t
 fromList [] = Nil
 fromList (a:as) = Cons a (fromList as)
+--
+depth (Node 1 (Node 2 (Node 2 (NilT) (NilT)) (Node 3 (NilT) (NilT))) (NilT))
 
 depth :: (Tree t) -> Int
+depth NilT = 0
+depth  (Node _ left right) = 1 + max (depth left) (depth right)
+
+collapse :: Tree t -> [t]
+collapse NilT = []
+collapse (Node node left right) = node : (collapse left) ++ (collapse right)
+
+mapTree :: (t -> u) -> Tree t -> Tree u
+mapTree f NilT = NilT
+mapTree f (Node node left right) = (Node (f node) (mapTree f left) (mapTree f right))
