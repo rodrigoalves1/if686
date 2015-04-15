@@ -61,6 +61,13 @@ filterList list c = filter isSmaller list
 filterr l n = filter (\x -> (foldr (+) 0 x) >= n) l
 --(>= n) . (foldr (+) 0) x
 
+inter :: [Int] -> [Int] -> [Int]
+inter l1 l2 = filter isMemberL2 l1
+ where isMemberL2 l = elem l l2
+
+diff :: [Int] -> [Int] -> [Int]
+diff l1 l2 = filter isNotMemberL2 l1
+ where isNotMemberL2 l = not (elem l l2)
 
 mapFilter :: (t -> Bool) -> [[t]] -> [[t]]
 mapFilter f list = map (filter f) list
