@@ -48,16 +48,14 @@ repetido (a:as) c
  | otherwise = 1 + repetido as c
  
  --map.filter
- {-
 mapp :: (t -> u) -> [t] -> [u]
 mapp f l = [f a | a <- l]
  
-filtro :: (t -> Bool) -> [t] -> [u]
+filtro :: (t -> Bool) -> [t] -> [t]
 filtro f l = [a | a <- l, f a]
  
 mapFilter :: (t -> Bool) -> [[t]] -> [[t]]
-mapFilter f l = mapp (filtro f l)
- -}
+mapFilter f l = mapp (filtro f) l
  --map.foldr
  --foldrr ::
 
