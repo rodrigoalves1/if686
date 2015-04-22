@@ -10,3 +10,13 @@ Questões: agrupar
 Slide 4: bfs :: Tree t -> t -> Bool
 
 Slide 5: union, inserir no e criar arvore, map.foldr	
+
+Slide 6
+
+• Dada uma lista de números, obter o maior da lista
+• Dada uma árvore binária, devolver uma função 
+que, dada uma árvore binária, verifica se as duas 
+árvores são isomórficas
+• Dada uma lista, devolve uma função que, dada uma 
+lista, devolve uma lista de pares onde cada par 
+contém um elemento de cada lista
