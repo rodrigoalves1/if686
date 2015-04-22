@@ -1,0 +1,12 @@
+Slide 1
+Questões: fibonacci e ordenar
+
+Slide 2
+Questões: dropLine, splitLines, fill, joinLines
+
+Slide 3
+Questões: agrupar
+
+Slide 4: bfs :: Tree t -> t -> Bool
+
+Slide 5: union, inserir no e criar arvore, map.foldr	
