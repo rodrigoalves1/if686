@@ -1,3 +1,5 @@
+--trabalho9
+--Questao 1
 -- Slide 1
 
 --[2,3] 2 itens [[2,3]] 1 item. [Int] [[Int]]
@@ -147,10 +149,16 @@ juntar (a:as) (b:bs)
 
 data Tree t = NilT | Node t (Tree t) (Tree t) deriving (Eq, Show)
 
-inserirNo :: Ord t => (Tree t) -> t -> (Tree t)
-inserirNo NilT no = (Node no NilT NilT)
-inserirNo (Node raiz left right) no = (Node raiz (inserirNo left no) right)
- 
+inserirNo :: Ord t => t -> (Tree t) -> (Tree t)
+inserirNo no NilT  = (Node no NilT NilT)
+inserirNo no (Node raiz left right)
+ | no < raiz = (Node raiz (inserirNo no left) right)
+ | no >= raiz = (Node raiz left (inserirNo no right))
+
+
+criarArvore :: Ord t => [t] -> (t -> Tree t -> Tree t) -> Tree t
+criarArvore l f = foldr f NilT  l
+
 mapp :: (t -> u) -> [t] -> [u]
 mapp f l = [f a | a <- l]
 
@@ -164,3 +172,77 @@ mapFold f l = mapp (folda  f) l
 funcao :: [[t] -> u] -> [t] -> [u]
 funcao [] _ = []
 funcao (a:as) m = (a m) : (funcao as m)
+
+--Slide 6
+
+maxList :: [Int] -> Int
+maxList = maximum
+
+isomorficas :: Eq t => Tree t -> Tree t -> Bool
+isomorficas NilT _ = False
+isomorficas _ NilT = False
+isomorficas (Node n l r) (Node n1 l1 r1)
+ | l == NilT && l1 /= NilT || l1 == NilT && l /= NilT = False
+ | r /= NilT && r1 == NilT || r == NilT && r1 /= NilT = False
+ | otherwise = (isomorficas l l1) && (isomorficas r r1)
+
+par :: (Eq t) => [t] -> [t] -> [(t,t)]
+par [] _ = []
+par _ [] = []
+par (a:as) (b:bs) = (a, b) : par as bs
+
+lista2Par :: (Eq t) => [t] -> ([t] -> [(t,t)])
+lista2Par list = \x -> par list x
+
+--Questao 2
+
+data Graph a = Graph [a] [(a, a, Int)] deriving (Show, Eq, Ord)
+data Tree2 t = NilT2 | Node2 t [Tree2 t] deriving (Eq, Show)
+
+getAdjacent :: (Eq a) => [(a,a,Int)] -> a -> [a]
+getAdjacent [] a = []
+getAdjacent ((x,y,p):ls) a
+	|x == a = (y:getAdjacent ls a)
+	|y == a = (x:getAdjacent ls a)
+	|otherwise =  getAdjacent ls a
+
+adjacencias::(Eq a) => (Graph a) -> [a] -> a -> a -> (Tree2 a)
+adjacencias (Graph l ls) pilha ini cheg 
+	|elem ini pilha == True = NilT2
+	|ini == cheg = (Node2 ini [NilT2]) 
+	|otherwise = Node2 ini [(adjacencias (Graph l ls) (ini:pilha) x cheg )|x<-adjs]
+		where
+		adjs = getAdjacent ls ini
+
+allPaths :: Tree2 a -> [[a]]
+allPaths NilT2 = [[]]
+allPaths (Node2 a ls) = [a:x | t <- ls, x <- allPaths t]
+
+getDistance::(Eq a) =>[(a,a,Int)] -> a -> a -> Int
+getDistance ((x,y,p):ls) a b 
+	| (x == a) && (y == b) = p
+	| (x == b) && (y == a) = p
+	|otherwise = (getDistance ls a b)
+
+allDistances :: (Eq a) =>[(a,a,Int)] -> [a] -> [Int]
+allDistances ls (b:[]) = []
+allDistances ls (a:b:rest) = ((getDistance ls a b):(allDistances ls (b:rest)))
+
+distances ::(Eq a) => (Graph a) -> [[a]] -> a -> [([a],Int)]
+distances (Graph l ls) paths cheg =  [(p,(foldr (+) 0 (allDistances ls p)))|p<-path]
+	where path = filter (elem cheg) paths
+
+menor :: [([a],Int)] -> ([a],Int) -> [a]
+menor [] (l,dist) = l
+menor ((lx,distx):ls) (l,dist)
+	|distx < dist = menor ls (lx,distx)
+	|otherwise = menor ls (l,dist)
+	
+
+shortest :: [([a],Int)] -> [a]
+shortest [] = []
+shortest ((l,dist):[]) = l
+shortest ((l,dist):ls) = menor ls (l,dist)
+	
+geraFuncoMenorCaminho ::(Eq a) => (Graph a) -> (a->a->[a])
+geraFuncoMenorCaminho graph = \x y ->shortest (distances graph (allPaths (adjacencias graph [] x y)) y) 
