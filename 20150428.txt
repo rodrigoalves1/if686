@@ -1,0 +1,125 @@
+Trabalho 10
+
+Questão 1
+
+foldr (+).(.).map
+
+map :: (a ->  b) -> [a] -> [b]
+(.) :: (c -> d) -> (e -> c) -> e -> d
+((.).map) :: (u -> v) -> (t -> u) -> t -> v
+
+(u -> v) == (c -> d) -> ((e -> c) -> e -> d)
+(t -> u) == (a ->  b) -> ([a] -> [b])
+
+u == (c -> d)
+v == ((e -> c) -> e -> d)
+t == (a -> b)
+u == ([a] -> [b])
+
+
+logo: u == (c->d) == ([a] -> [b]), então c == [a] e d == [b]
+daí, v == ((e->[a]) -> e -> [b]) ;e; t == (a->b)
+
+(.).map :: (a -> b) -> ((e -> [a]) -> e -> [b])
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+(+) :: Num c => c -> (c -> c)
+
+foldr (+) :: d -> [d] -> d
+
+(foldr (+)) . ((.).map) :: (g -> h) -> (i -> g) -> i -> h
+
+g == d
+h == [d] -> d
+i -> (a -> b)
+g -> ((e -> [a]) -> e -> [b])
+
+se d == g então h == [((e -> [a]) -> e -> [b])] -> (((e -> [a]) -> e -> [b])) 
+
+daí (foldr (+)) . ((.).map) :: (a -> b) -> [((e -> [a]) -> e -> [b])] -> (((e -> [a]) -> e -> [b])) 
+
+
+
+Questão 2
+(\x y z -> foldr z x y).map
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+
+então (\x y z -> foldr z x y) :: b -> [a] -> (a -> b -> b)
+
+map :: (c -> d) -> [c] -> [d]
+(.) :: (u -> v) -> (t -> u) -> t -> v
+
+(u -> v) == b -> ([a] -> (a -> b -> b) -> b)
+(t -> u) == (c -> d) -> ([c] -> [d])
+
+logo u == b == ([c] -> [d]) 
+
+então (\x y z -> foldr z x y).map :: (c -> d) -> ([a] -> (a -> ([c] -> [d]) -> ([c] -> [d])) -> ([c] -> [d]))
+
+Questão 3
+
+map.((.) (foldr (++) (foldr (++) [] [[1], [2]])))
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+(++) :: [c] -> [c] -> [c]
+
+foldr (++) [] [[1],[2]]] :: Num a => [a]
+
+foldr (++) (foldr (++) [] [[1],[2]]]) :: [[b]] -> [b]
+
+(.) foldr (++) (foldr (++) [] [[1],[2]]])
+(.) :: (u -> v) -> (t -> u) -> t -> v
+
+(u -> v) :: [[b]] -> [b]
+
+(.) foldr (++) (foldr (++) [] [[1],[2]]]) :: (t -> u) -> t -> v
+(.) foldr (++) (foldr (++) [] [[1],[2]]]) :: Num b => (t -> [[b]]) -> t -> [b]
+
+map :: (e -> f) -> [e] -> [f]
+
+(.) :: (x -> y) -> (z -> x) -> z -> y
+
+(x -> y) == (e -> f) -> ([e] -> [f])
+(z -> x) == (t -> [[b]]) -> (t -> [b]) 
+
+x == (e -> f) == (t -> [b])  
+logo,
+map.((.) (foldr (++) (foldr (++) [] [[1], [2]]))) :: Num b => (t -> [[b]]) ->  [t] -> [[b]]
+
+Questão 4
+
+(foldr).(.)$(!!)
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+(.) :: (c -> d) -> (e -> c) -> e -> d
+
+(.) :: (u -> v) -> (t -> u) -> t -> v
+
+(u -> v) :: (a -> b -> b) -> b -> [a] -> b
+(t -> u) :: (c -> d) -> ((e -> c) -> e -> d)
+
+u == (a -> b -> b) == ((e -> c) -> e -> d) ; logo a == (e -> c) ; b == e == d
+
+então (foldr).(.) :: t -> v  
+
+daí (foldr).(.) :: (c -> d) -> d -> [d -> c] -> d
+
+$ :: (h -> i) -> h -> i
+(!!) :: [g] -> Int -> g
+
+(h -> i) == (c -> d) -> d -> [d -> c] -> d
+
+h == (c -> d)
+i == d -> [d -> c] -> d
+
+h == [g] -> Int -> g
+
+logo h == (c -> d) == [g] -> Int -> g então c = [g] ; d = Int -> g
+
+se (foldr).(.)$(!!) :: i
+
+então (foldr).(.)$(!!) :: d -> [d -> c] -> d
+substituindo .: 
+
+(foldr).(.)$(!!) :: Int -> g -> [(Int -> g) -> [g]] -> Int -> g
