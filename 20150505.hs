@@ -51,3 +51,6 @@ split :: Maybe String -> IO [String]
 split Nothing = return []
 split (Just []) = return []
 split (Just str) = return (splitWords str)
+
+main :: IO()
+main = putStrLn "Digite uma palavra" >>  getLine >>= (\str -> filtragem str str) >>= (\a -> toUper a) >>= (\b -> split b) >>= (\c -> mapM_ putStrLn c) 
