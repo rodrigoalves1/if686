@@ -118,3 +118,4 @@ split (Just str) = return (splitWords str)
 
 main :: IO()
 main = putStrLn "Digite uma palavra" >>  getLine >>= (\str -> filtragem str str) >>= (\a -> toUper a) >>= (\b -> split b) >>= (\c -> mapM_ putStrLn c) 
+--mudança pro git achar q tem algo diferente
